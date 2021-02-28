@@ -29,7 +29,8 @@
     "jest": "^26.6.3"
   },
   "dependencies": {
-    "core-js": "^2.6.12",
+    "axios": "^0.21.1",
+    "base64-arraybuffer": "^0.2.0",
     "twitter-text": "^3.1.0"
   }
 }
