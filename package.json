@@ -1,0 +1,31 @@
+{
+  "name": "@whalecoiner/tweet2svg",
+  "description": "Turn a Tweet into a (somewhat) beautiful SVG.",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "npx jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/whalecoiner/tweet2svg.git"
+  },
+  "keywords": [
+    "svg",
+    "twitter"
+  ],
+  "author": "Whalecoiner",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/whalecoiner/tweet2svg/issues"
+  },
+  "homepage": "https://github.com/whalecoiner/tweet2svg#readme",
+  "devDependencies": {
+    "@babel/preset-env": "^7.13.8",
+    "jest": "^26.6.3"
+  },
+  "dependencies": {
+    "twitter-text": "^3.1.0"
+  }
+}
