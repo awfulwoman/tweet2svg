@@ -15,7 +15,7 @@ describe('Checking the basics',  () => {
   })
 })
 
-describe('Checking the basics',  () => {
+describe('Checking the basics', () => {
   test('Read data', async () => {
     await expect(tweet2svg(rawData)).resolves.toContain(`<svg xmlns="http://www.w3.org/2000/svg" xmlns: xlink="http://www.w3.org/1999/xlink" width="20em">`)
     await expect(tweet2svg(rawData)).resolves.toContain(`<a class="tweetsvg" href="https://twitter.com/jlittman_dev/status/847804888365117440"><h1 class="tweetsvg">Justin Littman dev</h1></a>`)

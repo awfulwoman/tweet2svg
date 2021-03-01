@@ -1,11 +1,9 @@
 import twttr from 'twitter-text'
-import axios from 'axios'
-import b64 from 'base64-arraybuffer'
+import getFile from './lib/get-file'
 
 const getbase64FromUrl = async (theUrl) => {
   try {
-    const response = await axios.get(theUrl, { responseType: 'arraybuffer' })
-    return b64.encode(response.data)
+    return await getFile({ url: theUrl })
   } catch (error) {
     console.log(error)
     throw error
