@@ -1,5 +1,5 @@
-import twttr from 'twitter-text'
-import getFile from './lib/get-file'
+const twttr = require('twitter-text')
+const getFile = require('./lib/get-file')
 
 const getbase64FromUrl = async (theUrl) => {
   try {
@@ -35,11 +35,11 @@ const tweet2svg = async (tweetData) => {
   if (extendedTweetEntities.media) {
     for (const mediaEntity of extendedTweetEntities.media) {
       if (mediaEntity.type === 'photo') {
-        let mediaEntityUrl = mediaEntity.media_url_https
-        let mediaEntityBase64 = await getbase64FromUrl(mediaEntityUrl)
-        let mediaEntityHeight = mediaEntity.sizes.small.h
-        let mediaEntityWidth = mediaEntity.sizes.small.w
-        let mediaEntityAlt = mediaEntity.ext_alt_text || null
+        const mediaEntityUrl = mediaEntity.media_url_https
+        const mediaEntityBase64 = await getbase64FromUrl(mediaEntityUrl)
+        // const mediaEntityHeight = mediaEntity.sizes.small.h
+        const mediaEntityWidth = mediaEntity.sizes.small.w
+        const mediaEntityAlt = mediaEntity.ext_alt_text || null
         mediaHtml += `<a href="${tweetUrl}"><img class="media-tweetsvg" width="${mediaEntityWidth}" src="data:image/jpeg;base64,${mediaEntityBase64}" alt="${mediaEntityAlt}"/></a>`
       }
     }
@@ -75,4 +75,4 @@ const tweet2svg = async (tweetData) => {
 `
 }
 
-export default tweet2svg
+module.exports = tweet2svg
