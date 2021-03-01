@@ -5,13 +5,14 @@ describe('Checking the basics',  () => {
   test('Reject empty tweetdata field', async () => {
     await expect(tweet2svg()).rejects.toThrow('No data supplied')
   })
+
   test('Reject tweetdata field that is not an object', async () => {
     await expect(tweet2svg('sdfsdfs')).rejects.toThrow('No object supplied')
   })
 
-  // test('Accept tweetdata field that is an object', () => {
-  //   expect(tweet2svg({})).toBe()
-  // })
+  test('Reject tweetdata field that is an empty object', async () => {
+    await expect(tweet2svg({})).rejects.toThrow('No extended tweet data found')
+  })
 })
 
 describe('Checking the basics',  () => {

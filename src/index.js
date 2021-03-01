@@ -1,66 +1,51 @@
-// import parseTags from './lib/parse'
 import twttr from 'twitter-text'
 import axios from 'axios'
 import b64 from 'base64-arraybuffer'
 
 const getbase64FromUrl = async (theUrl) => {
   try {
-    const response = await axios.get(theUrl, {responseType: 'arraybuffer'})
-    const data = response.data
-    // console.log(response)
-    return b64.encode(data) 
+    const response = await axios.get(theUrl, { responseType: 'arraybuffer' })
+    return b64.encode(response.data)
   } catch (error) {
     console.log(error)
+    throw error
   }
 }
 
 const tweet2svg = async (tweetData) => {
-
   if (!tweetData) throw new Error('No data supplied')
   if (typeof tweetData !== 'object') throw new Error('No object supplied')
   if (!tweetData.extended_tweet) throw new Error('No extended tweet data found')
   if (!tweetData.extended_tweet.entities) throw new Error('No extended tweet entity data found')
   if (!tweetData.extended_tweet.full_text) throw new Error('No extended tweet full_text data found')
 
-  let extendedTweetEntities = tweetData.extended_tweet.entities
-  let extendedTweetFullText = tweetData.extended_tweet.full_text
+  const extendedTweetEntities = tweetData.extended_tweet.entities
+  const extendedTweetFullText = tweetData.extended_tweet.full_text
 
-  let avatarB64 = await getbase64FromUrl(tweetData.user.profile_image_url_https)
-  let tweetUrl = `https://twitter.com/${tweetData.user.screen_name}/status/${tweetData.id_str}`
-  let nameFull = tweetData.user.name
-  let nameUser = tweetData.user.screen_name
+  const avatarB64 = await getbase64FromUrl(tweetData.user.profile_image_url_https)
+  const tweetUrl = `https://twitter.com/${tweetData.user.screen_name}/status/${tweetData.id_str}`
+  const nameFull = tweetData.user.name
+  const nameUser = tweetData.user.screen_name
   // let bodyHtml = parseTags(extendedTweetFullText, extendedTweetEntities)
-  let bodyHtml = twttr.autoLinkWithJSON(extendedTweetFullText, extendedTweetEntities)
+  const bodyHtml = twttr.autoLinkWithJSON(extendedTweetFullText, extendedTweetEntities)
 
-  let date = new Date(tweetData.created_at.replace(/( \+)/, ' UTC$1'))
-  let dateIso = date.toISOString()
-  let dateHuman = tweetData.created_at
-  let mediaHtml = ''
+  const date = new Date(tweetData.created_at.replace(/( \+)/, ' UTC$1'))
+  const dateIso = date.toISOString()
+  const dateHuman = tweetData.created_at
+  let mediaHtml
 
-
-  // if (isset($tweet_data->extended_entities)) {
-
-  //   foreach($tweet_data->extended_entities->media as $media) {
-
-  //     $image  = $media->media_url_https;
-  //     $width  = $media->sizes->small->w;
-  //     $height = $media->sizes->small->h;
-
-  //     if (isset($media->ext_alt_text)){
-  //       $alt = $media->ext_alt_text;
-  //     }
-
-  //     $media_url = $tweet_data->entities->media[0]->media_url_https;
-  //     $media_b64 = base64_encode(file_get_contents("{$media_url}?name=small"));
-
-  //     $media_html .= "<a href=\"{$url}\"><img
-  //       class=\"media-tweetsvg\"
-  //       width=\"{$width}\"
-  //       src=\"data:image/jpeg;base64,{$media_b64}\"
-  //       alt=\"{$alt}\"/></a>";
-  //   }
-  // }
-
+  if (extendedTweetEntities.media) {
+    for (const mediaEntity of extendedTweetEntities.media) {
+      if (mediaEntity.type === 'photo') {
+        let mediaEntityUrl = mediaEntity.media_url_https
+        let mediaEntityBase64 = await getbase64FromUrl(mediaEntityUrl)
+        let mediaEntityHeight = mediaEntity.sizes.small.h
+        let mediaEntityWidth = mediaEntity.sizes.small.w
+        let mediaEntityAlt = mediaEntity.ext_alt_text || null
+        mediaHtml += `<a href="${tweetUrl}"><img class="media-tweetsvg" width="${mediaEntityWidth}" src="data:image/jpeg;base64,${mediaEntityBase64}" alt="${mediaEntityAlt}"/></a>`
+      }
+    }
+  }
 
   return `
   <svg xmlns="http://www.w3.org/2000/svg" xmlns: xlink="http://www.w3.org/1999/xlink" width="20em">
@@ -90,7 +75,6 @@ const tweet2svg = async (tweetData) => {
     </foreignObject>
   </svg>
 `
-
 }
 
 export default tweet2svg
